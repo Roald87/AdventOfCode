@@ -26,31 +26,18 @@ module Day5 =
         >> List.map toCoordinates
 
     let sweepCoords1 c =
-        if c.y1 = c.y2 then
-            let step = if c.x1 < c.x2 then 1 else -1
-
-            [ c.x1 .. step .. c.x2 ]
-            |> List.map (fun x -> { x = x; y = c.y1 })
-        else if c.x1 = c.x2 then
+        match c with
+        | c when c.x1 = c.x2 ->
             let step = if c.y1 < c.y2 then 1 else -1
 
             [ c.y1 .. step .. c.y2 ]
             |> List.map (fun y -> { x = c.x1; y = y })
-        else
-            []
-    // match c with
-    // | c when c.y1 = c.y2 ->
-    //     [ c.x1 .. c.x2 ]
-    //     |> List.map (fun x -> { x = x; y = c.y1 })
-    // | c when c.x1 = c.x2 ->
-    //     [ c.y1 .. c.y2 ]
-    //     |> List.map (fun y -> { x = c.x1; y = y })
-    // | _ -> []
-    // let x = [ c.x1 .. c.x2 ]
-    // let y = [ c.y1 .. c.y2 ]
-    // List.zip x y |>
+        | c when c.y1 = c.y2 ->
+            let step = if c.x1 < c.x2 then 1 else -1
 
-
+            [ c.x1 .. step .. c.x2 ]
+            |> List.map (fun x -> { x = x; y = c.y1 })
+        | _ -> []
 
     let markVents1 (coords: Coordinates list) =
         coords |> List.map sweepCoords1 |> List.concat
@@ -65,8 +52,11 @@ module Day5 =
         |> List.length
 
     let sweepCoords2 c =
-        if abs (c.x1 - c.y2) = abs (c.y1 - c.x2)
-           || abs (c.x1 - c.x2) = abs (c.y1 - c.y2) then
+        match c with
+        | c when
+            abs (c.x1 - c.y2) = abs (c.y1 - c.x2)
+            || abs (c.x1 - c.x2) = abs (c.y1 - c.y2)
+            ->
             let xstep = if c.x1 < c.x2 then 1 else -1
             let x = [ c.x1 .. xstep .. c.x2 ]
 
@@ -75,18 +65,17 @@ module Day5 =
 
             List.zip x y
             |> List.map (fun (x, y) -> { x = x; y = y })
-        else if c.y1 = c.y2 then
-            let step = if c.x1 < c.x2 then 1 else -1
-
-            [ c.x1 .. step .. c.x2 ]
-            |> List.map (fun x -> { x = x; y = c.y1 })
-        else if c.x1 = c.x2 then
+        | c when c.x1 = c.x2 ->
             let step = if c.y1 < c.y2 then 1 else -1
 
             [ c.y1 .. step .. c.y2 ]
             |> List.map (fun y -> { x = c.x1; y = y })
-        else
-            []
+        | c when c.y1 = c.y2 ->
+            let step = if c.x1 < c.x2 then 1 else -1
+
+            [ c.x1 .. step .. c.x2 ]
+            |> List.map (fun x -> { x = x; y = c.y1 })
+        | _ -> []
 
     let markVents2 (coords: Coordinates list) =
         coords |> List.map sweepCoords2 |> List.concat
