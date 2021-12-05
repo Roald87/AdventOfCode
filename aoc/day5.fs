@@ -66,17 +66,7 @@ module Day5 =
 
             List.zip x y
             |> List.map (fun (x, y) -> { x = x; y = y })
-        | c when c.x1 = c.x2 ->
-            let step = if c.y1 < c.y2 then 1 else -1
-
-            [ c.y1 .. step .. c.y2 ]
-            |> List.map (fun y -> { x = c.x1; y = y })
-        | c when c.y1 = c.y2 ->
-            let step = if c.x1 < c.x2 then 1 else -1
-
-            [ c.x1 .. step .. c.x2 ]
-            |> List.map (fun x -> { x = x; y = c.y1 })
-        | _ -> []
+        | _ -> sweepCoords1 c
 
     let markVents2 (coords: Coordinates list) =
         coords |> List.map sweepCoords2 |> List.concat
