@@ -59,3 +59,40 @@ let ``day 4 part 2 real data`` () =
 
     Day4.lastToWin myDraws myBoards
     |> should equal 24628
+
+[<Fact>]
+let ``day 5 part 1 test data`` () =
+    let input = Day5.parseInput "assets/test5.txt"
+
+    Day5.part1 input |> should equal 5
+
+[<Fact>]
+let ``day 5 part 2 test data`` () =
+    let input = Day5.parseInput "assets/test5.txt"
+
+    Day5.part2 input |> should equal 12
+
+[<Fact>]
+let ``day 5 part 1 real data`` () =
+    let input = Day5.parseInput "assets/input5.txt"
+
+    Day5.part1 input |> should equal 7297
+
+[<Fact>]
+let ``day 5 part 2 real data`` () =
+    let input = Day5.parseInput "assets/input5.txt"
+
+    Day5.part2 input |> should equal 21038
+
+// open Day5
+
+// [<Fact>]
+// let ``day 5 diagonal check`` () =
+//     Day5.sweepCoords2 { x1 = 6; y1 = 4; x2 = 2; y2 = 0 }
+//     |> should
+//         equal
+//         [ { x = 6; y = 4 }
+//           { x = 5; y = 3 }
+//           { x = 4; y = 2 }
+//           { x = 3; y = 1 }
+//           { x = 2; y = 0 } ]
