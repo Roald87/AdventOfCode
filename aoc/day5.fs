@@ -2,8 +2,9 @@ namespace aoc
 
 open System.IO
 
+open Utilities
+
 module Day5 =
-    let split (sep: string) (str: string) = str.Split(sep) |> Array.toList
 
     type Coordinate = { x: int; y: int }
     type Coordinates = { x1: int; y1: int; x2: int; y2: int }
