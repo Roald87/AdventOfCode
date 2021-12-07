@@ -96,3 +96,12 @@ let ``day 5 part 2 real data`` () =
 //           { x = 4; y = 2 }
 //           { x = 3; y = 1 }
 //           { x = 2; y = 0 } ]
+
+[<Fact>]
+let ``Day 6 part 1 large numbers `` () =
+    let input = Day6.parseInput "assets/test6.txt"
+
+    Day6.simFishSchool 18UL input |> should equal 26UL
+
+    Day6.simFishSchool 80UL input
+    |> should equal 5934UL
