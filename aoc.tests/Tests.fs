@@ -84,19 +84,6 @@ let ``day 5 part 2 real data`` () =
 
     Day5.part2 input |> should equal 21038
 
-// open Day5
-
-// [<Fact>]
-// let ``day 5 diagonal check`` () =
-//     Day5.sweepCoords2 { x1 = 6; y1 = 4; x2 = 2; y2 = 0 }
-//     |> should
-//         equal
-//         [ { x = 6; y = 4 }
-//           { x = 5; y = 3 }
-//           { x = 4; y = 2 }
-//           { x = 3; y = 1 }
-//           { x = 2; y = 0 } ]
-
 [<Fact>]
 let ``Day 6 part 1 large numbers `` () =
     let input = Day6.parseInput "assets/test6.txt"
@@ -105,3 +92,15 @@ let ``Day 6 part 1 large numbers `` () =
 
     Day6.simFishSchool 80UL input
     |> should equal 5934UL
+
+[<Fact>]
+let ``Day 8 part 1`` () =
+    let input = Day8.parseInput "assets/input8.txt"
+
+    Day8.part1 input |> should equal 367
+
+[<Fact>]
+let ``Day 8 part 2`` () =
+    let input = Day8.parseInput "assets/input8.txt"
+
+    Day8.part2 input |> should equal 974512.0
