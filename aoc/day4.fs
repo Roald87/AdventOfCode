@@ -3,14 +3,12 @@ namespace aoc
 open System
 open System.IO
 
+open Utilities
+
 module Day4 =
     let read fname = File.ReadLines fname
 
     let readInput = read >> Seq.toList
-    
-    let split (sep: string) (str: string) =
-        str.Split(sep, StringSplitOptions.RemoveEmptyEntries)
-        |> Array.toList
     
     let draws = readInput >> List.head >> split ","
     
