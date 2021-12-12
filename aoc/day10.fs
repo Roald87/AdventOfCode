@@ -16,7 +16,6 @@ module Day10 =
             .Replace("{}", "")
 
     let removeAllMatchingBraces (line: string) =
-
         let rec removeBraces (line: string) =
             let filteredLine = replacePossibleMatchingBraces line
 
