@@ -56,3 +56,5 @@ module Day9 =
         |> lowestPoints
         |> List.map (fun (x, y) -> (input.[x].[y]))
         |> List.sumBy (fun x -> x + 1)
+
+    let flooded =List.map (List.map (fun x -> if x < 9 then 1 else 0))
