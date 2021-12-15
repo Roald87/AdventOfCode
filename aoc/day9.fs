@@ -13,33 +13,37 @@ module Day9 =
             >> Array.toList
             >> List.map (fun x -> int (x) - int ('0'))
         )
+        >> array2D
 
-    let lowestPoints (t: int list list) =
+    let lowestPoints (t: int [,]) =
         let mutable lowestCoords = []
 
-        for i in 0 .. t.Length - 1 do
-            for j in 0 .. t.[0].Length - 1 do
+        let maxX = (t |> Array2D.length1) - 1
+        let maxY = (t |> Array2D.length2) - 1
+
+        for i in 0 .. maxX do
+            for j in 0 .. maxY do
                 let diffNextOne =
-                    if j < t.[0].Length - 1 then
-                        (t.[i].[j] - t.[i].[j + 1])
+                    if j < maxY then
+                        (t.[i, j] - t.[i, j + 1])
                     else
                         -1
 
                 let diffPrevOne =
                     if j > 0 then
-                        (t.[i].[j] - t.[i].[j - 1])
+                        (t.[i, j] - t.[i, j - 1])
                     else
                         -1
 
                 let diffBelowOne =
-                    if i < t.Length - 1 then
-                        (t.[i].[j] - t.[i + 1].[j])
+                    if i < maxX then
+                        (t.[i, j] - t.[i + 1, j])
                     else
                         -1
 
                 let diffAboveOne =
                     if i > 0 then
-                        (t.[i].[j] - t.[i - 1].[j])
+                        (t.[i, j] - t.[i - 1, j])
                     else
                         -1
 
@@ -54,7 +58,8 @@ module Day9 =
     let part1 input =
         input
         |> lowestPoints
-        |> List.map (fun (x, y) -> (input.[x].[y]))
+        |> List.map (fun (x, y) -> (input.[x, y]))
         |> List.sumBy (fun x -> x + 1)
 
-    let flooded =List.map (List.map (fun x -> if x < 9 then 1 else 0))
+    let flooded =
+        List.map (List.map (fun x -> if x < 9 then 1 else 0))
