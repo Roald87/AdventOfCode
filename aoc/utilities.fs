@@ -18,7 +18,7 @@ module Utilities =
 
     let parseSingleLineIntCsv = parseSingleLineCsv >> List.map int
 
-    let stringToChars = Seq.toArray
+    let stringToChars (str: string) = str |> Seq.toArray
 
     let concat (chars: char list) =
         chars |> List.map string |> String.concat ""
