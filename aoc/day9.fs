@@ -61,5 +61,56 @@ module Day9 =
         |> List.map (fun (x, y) -> (input.[x, y]))
         |> List.sumBy (fun x -> x + 1)
 
-    let flooded =
-        List.map (List.map (fun x -> if x < 9 then 1 else 0))
+    let flood =
+        Array2D.map (fun x -> if x < 9 then 1 else 0)
+
+    let selectNeighbours maxX maxY c =
+        let (x, y) = c
+
+        [ (x - 1, y)
+          (x + 1, y)
+          (x, y - 1)
+          (x, y + 1) ]
+        |> List.filter (fun (x, y) -> (x >= 0 && x <= maxX && y >= 0 && y <= maxY))
+
+    let part2 input =
+        let floodedCave = flood input
+
+        let width = floodedCave |> Array2D.length1
+        let height = floodedCave |> Array2D.length2
+
+        let neighborSelect =
+            selectNeighbours (width - 1) (height - 1)
+
+        let rec growPatch
+            (currentPatch: Set<int * int>)
+            (neighboursToCheck: list<int * int>) =
+            
+            let neightboursPartOfPatch =
+                neighboursToCheck
+                |> List.filter (fun (i, j) -> floodedCave.[i, j] = 1)
+        
+            let newPatch =
+                neightboursPartOfPatch
+                |> Set.ofList
+                |> Set.union currentPatch
+        
+            let newNeighbours =
+                neightboursPartOfPatch
+                |> List.map neighborSelect
+                |> List.concat
+                |> Set.ofList
+                |> (fun x -> x - currentPatch)
+                |> Set.toList
+        
+            if newNeighbours.Length = 0 then
+                currentPatch
+            else
+                growPatch newPatch newNeighbours
+        
+        lowestPoints input
+        |> List.map (fun elem -> growPatch ([ elem ] |> Set.ofList) [ elem ])
+        |> List.map (fun x -> x.Count)
+        |> List.sortDescending
+        |> List.take 3
+        |> List.reduce (fun acc x -> acc * x)
