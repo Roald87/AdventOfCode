@@ -12,30 +12,22 @@ module Day12 =
         >> Seq.toList
         >> List.map (split "-")
 
-    let trajectories input : Map<string, list<string>> =
+    let caveMapper input : Map<string, list<string>> =
         input @ (input |> List.map List.rev)
         |> List.groupBy (fun from -> from.[0])
-        |> List.map (fun (from, toos) -> from, List.concat toos)
         |> List.map (fun (from, toos) ->
-            (from, (List.filter (fun towards -> from <> towards) toos)))
+            from, (List.concat toos |> List.except [ from ]))
         |> Map
 
-    let allLower (str: string) =
-        let lowerCases =
-            str
-            |> stringToChars
-            |> Array.filter (fun x -> x |> Char.IsLower)
-            |> Array.length
-
-        lowerCases = str.Length
+    let isLower (str: string) = str.[0] |> Char.IsLower
 
     let countAllPaths countSmallOnesTwice input =
-        let caveMap = trajectories input
+        let caveMap = caveMapper input
         let mutable nPaths = 0
 
         let rec countNextPaths origin seen countTwice =
             let newSeen =
-                if origin |> allLower then
+                if origin |> isLower then
                     Set.union seen (Set.empty.Add origin)
                 else
                     seen
