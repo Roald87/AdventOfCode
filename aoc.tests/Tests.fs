@@ -152,3 +152,15 @@ let ``Day 12 part 1 real data`` () =
     let input = Day12.parseInput "assets/input12.txt"
 
     Day12.part1 input |> should equal 3576
+
+[<Fact>]
+let ``Day 12 part 2 test data`` () =
+    let input = Day12.parseInput "assets/test12.txt"
+
+    Day12.part2 input |> should equal 36
+
+[<Fact>]
+let ``Day 12 part 2 real data`` () =
+    let input = Day12.parseInput "assets/input12.txt"
+
+    Day12.part2 input |> should equal 84271
