@@ -23,7 +23,6 @@ module Day12 =
 
     let countAllPaths countSmallOnesTwice input =
         let caveMap = caveMapper input
-        let mutable nPaths = 0
 
         let rec countNextPaths origin seen countTwice =
             let newSeen =
@@ -32,17 +31,17 @@ module Day12 =
                 else
                     seen
 
-            for target in caveMap.[origin] do
-                if target = "end" then
-                    nPaths <- nPaths + 1
-                elif seen |> Set.contains target |> not then
-                    nPaths <- countNextPaths target newSeen countTwice
-                elif target <> "start" && countTwice then
-                    nPaths <- countNextPaths target newSeen false
-                else
-                    ()
-
-            nPaths
+            List.sumBy
+                (fun target ->
+                    if target = "end" then
+                        1
+                    elif seen |> Set.contains target |> not then
+                        countNextPaths target newSeen countTwice
+                    elif target <> "start" && countTwice then
+                        countNextPaths target newSeen false
+                    else
+                        0)
+                caveMap.[origin]
 
         countNextPaths "start" Set.empty countSmallOnesTwice
 
