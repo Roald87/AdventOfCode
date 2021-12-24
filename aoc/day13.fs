@@ -46,29 +46,27 @@ module Day13 =
 
         paper
 
+    let size arr =
+        arr |> Array2D.length1, arr |> Array2D.length2
+
     let mirrorX arr =
-        let heigth = arr |> Array2D.length1
-        let width = arr |> Array2D.length2
+        let heigth, width = size arr
         Array2D.init heigth width (fun i j -> arr.[i, Math.Abs(j - width + 1)])
 
     let mirrorY arr =
-        let heigth = arr |> Array2D.length1
-        let width = arr |> Array2D.length2
+        let heigth, width = size arr
         Array2D.init heigth width (fun i j -> arr.[Math.Abs(i - heigth + 1), j])
 
     let elementWiseAdd (arr1: int [,]) (arr2: int [,]) =
-        let heigth = arr1 |> Array2D.length1
-        let width = arr1 |> Array2D.length2
-
+        let heigth, width = size arr1
         Array2D.init heigth width (fun i j -> arr1.[i, j] + arr2.[i, j])
 
     let fold line (paper: int [,]) =
         let side1, side2 =
             match line with
-            | Y x -> paper.[..x - 1, *], mirrorY paper.[x + 1.., *]
-            | X y -> paper.[*, ..y - 1], mirrorX paper.[*, y + 1..]
+            | X x -> paper.[*, ..x - 1], mirrorX paper.[*, x + 1..]
+            | Y y -> paper.[..y - 1, *], mirrorY paper.[y + 1.., *]
 
-        // side1, side2
         elementWiseAdd side1 side2
 
     let part1 input =
