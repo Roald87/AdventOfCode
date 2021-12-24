@@ -164,3 +164,22 @@ let ``Day 12 part 2 real data`` () =
     let input = Day12.parseInput "assets/input12.txt"
 
     Day12.part2 input |> should equal 84271
+
+[<Fact>]
+let ``Day 13 part 1 real data`` () =
+    Day13.part1 "assets/input13.txt"
+    |> should equal 745
+
+[<Fact>]
+let ``Day 13 part 2 real data`` () =
+    // let input = Day13.parseInput "assets/input13.txt"
+
+    Day13.part2 "assets/input13.txt"
+    |> should
+        equal
+        [| " ██  ███  █  █   ██ ████ ███   ██   ██  "
+           "█  █ █  █ █ █     █ █    █  █ █  █ █  █ "
+           "█  █ ███  ██      █ ███  ███  █    █    "
+           "████ █  █ █ █     █ █    █  █ █ ██ █    "
+           "█  █ █  █ █ █  █  █ █    █  █ █  █ █  █ "
+           "█  █ ███  █  █  ██  █    ███   ███  ██  " |]
