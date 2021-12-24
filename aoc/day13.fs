@@ -75,13 +75,14 @@ module Day13 =
         |> Seq.sumBy (fun x -> if x >= 1 then 1 else 0)
 
     let part2 input =
-        let mutable foldingPaper = Array2D.copy (readDots input)
+        let rec doFold (foldingPaper: int[,]) (instructions: seq<Fold>) =
+            match instructions |> Seq.toList with
+            | [] -> foldingPaper
+            | head::tail -> doFold (fold head foldingPaper) tail
 
-        for foldInstruction in (foldInstructions input) do
-            foldingPaper <- (fold foldInstruction foldingPaper)
+        let foldingPaper = doFold (readDots input) (foldInstructions input)
 
         let widthArr = foldingPaper |> Array2D.length1
-
         foldingPaper
         |> Seq.cast<int>
         |> Seq.map (fun x -> if x >= 1 then "█" else " ")

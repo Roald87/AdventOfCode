@@ -172,8 +172,6 @@ let ``Day 13 part 1 real data`` () =
 
 [<Fact>]
 let ``Day 13 part 2 real data`` () =
-    // let input = Day13.parseInput "assets/input13.txt"
-
     Day13.part2 "assets/input13.txt"
     |> should
         equal
