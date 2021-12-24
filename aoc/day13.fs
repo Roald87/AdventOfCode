@@ -69,21 +69,24 @@ module Day13 =
 
         elementWiseAdd side1 side2
 
+    let doFolding foldingPaper instructions =
+        let rec doFold (foldingPaper: int[,]) (instructions: seq<Fold>) =
+            match instructions |> Seq.toList with
+            | [] -> foldingPaper
+            | head::tail -> doFold (fold head foldingPaper) tail
+
+        doFold foldingPaper instructions
+
     let part1 input =
         fold (foldInstructions input |> Seq.head) (readDots input)
         |> Seq.cast<int>
         |> Seq.sumBy (fun x -> if x >= 1 then 1 else 0)
 
     let part2 input =
-        let rec doFold (foldingPaper: int[,]) (instructions: seq<Fold>) =
-            match instructions |> Seq.toList with
-            | [] -> foldingPaper
-            | head::tail -> doFold (fold head foldingPaper) tail
+        let foldedPaper = doFolding (readDots input) (foldInstructions input)
 
-        let foldingPaper = doFold (readDots input) (foldInstructions input)
-
-        let widthArr = foldingPaper |> Array2D.length1
-        foldingPaper
+        let widthArr = foldedPaper |> Array2D.length1
+        foldedPaper
         |> Seq.cast<int>
         |> Seq.map (fun x -> if x >= 1 then "█" else " ")
         |> Seq.toArray
