@@ -182,8 +182,12 @@ let ``Day 13 part 2 real data`` () =
            "█  █ █  █ █ █  █  █ █    █  █ █  █ █  █ "
            "█  █ ███  █  █  ██  █    ███   ███  ██  " |]
 
-
 [<Fact>]
 let ``Day 14 part 1 real data`` () =
     Day14.part1 "assets/input14.txt"
     |> should equal 3555
+
+[<Fact>]
+let ``Day 25 part 1 real data`` () =
+    Day25.part1 "assets/input25.txt"
+    |> should equal 360

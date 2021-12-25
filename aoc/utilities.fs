@@ -24,3 +24,6 @@ module Utilities =
         chars |> List.map string |> String.concat ""
 
     let concatA (chars: char []) = chars |> Array.toList |> concat
+
+    let size arr =
+        arr |> Array2D.length1, arr |> Array2D.length2
