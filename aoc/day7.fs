@@ -14,13 +14,12 @@ module Day7 =
 
     let moveCost intialPositions move =
         intialPositions
-        |> List.map (fun x -> abs (move - x))
-        |> List.sum
+        |> List.sumBy (fun x -> abs (move - x))
 
     let part1 input =
         [ -1000 .. 1000 ]
         |> List.map (fun x -> (x, moveCost input x))
-        |> List.minBy (fun (x, c) -> c)
+        |> List.minBy snd
 
     let moveCost2 intialPositions move =
         intialPositions
@@ -31,4 +30,4 @@ module Day7 =
     let part2 input =
         [ 300 .. 500 ]
         |> List.map (fun x -> (x, moveCost2 input x))
-        |> List.minBy (fun (x, c) -> c)
+        |> List.minBy snd
