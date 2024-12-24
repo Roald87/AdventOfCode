@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run tests",
+			"command": "dotnet",
+			"type": "shell",
+			"args": [
+				"test",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/aoc.tests",
+				"env": {
+					"VSTEST_HOST_DEBUG": "1"
+				}
+			},
+			"problemMatcher": "$msCompile"
+		}
+	]
+}

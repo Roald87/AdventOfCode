@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="utilities.fs" />
+    <Compile Include="day1.fs" />
+    <Compile Include="day2.fs" />
+    <Compile Include="day3.fs" />
+    <Compile Include="day4.fs" />
+    <Compile Include="day5.fs" />
+    <Compile Include="day6.fs" />
+    <Compile Include="day7.fs" />
+    <Compile Include="day8.fs" />
+    <Compile Include="day9.fs" />
+    <Compile Include="day10.fs" />
+    <Compile Include="day11.fs" />
+    <Compile Include="day12.fs" />
+    <Compile Include="day13.fs" />
+    <Compile Include="day14.fs" />
+    <Compile Include="day15.fs" />
+    <Compile Include="day25.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharpx.Collections" Version="3.0.1" />
+  </ItemGroup>
+</Project>

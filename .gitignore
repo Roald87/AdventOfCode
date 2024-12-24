@@ -1,0 +1,13 @@
+# do not commit inputs
+*.txt 
+
+aocdl
+.aocdlconfig
+*.db
+
+.idea/
+.pytest_cache/
+__pycache__/
+
+bin/
+obj/
