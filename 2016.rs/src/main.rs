@@ -2,9 +2,9 @@ use std::{collections::HashSet, fs::read_to_string};
 use num::complex::Complex;
 
 fn main() {
-    let fname = "day01.txt";
-    println!("part a: {:?}", day01a(read_lines(fname))); // part a: 243
-    println!("part b: {:?}", day01b(read_lines(fname))); // part b: 142
+    let instructions = read_lines("day01.txt");
+    println!("part a: {:?}", day01(&instructions, false)); // part a: 243
+    println!("part b: {:?}", day01(&instructions, true)); // part b: 142
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -32,18 +32,7 @@ fn step(direction: Complex<i32>, instruction: &str) -> (Complex<i32>, Complex<i3
     (new_dir, new_dir * n)
 }
 
-fn day01a(instructions: Vec<String>) -> i32 {
-    let mut dir = Complex::new(0, 1);
-    let mut pos = Complex::new(0, 0);
-    for instruction in instructions {
-        let (new_dir, step) = step(dir, &instruction);
-        dir = new_dir;
-        pos += step;
-    }
-    pos.re.abs() + pos.im.abs()
-}
-
-fn day01b(instructions: Vec<String>) -> i32 {
+fn day01(instructions: &[String], first_double_location: bool) -> i32 {
     let mut dir = Complex::new(0, 1);
     let mut pos = Complex::new(0, 0);
     let mut visited = HashSet::new();
@@ -53,7 +42,7 @@ fn day01b(instructions: Vec<String>) -> i32 {
         dir = new_dir;
         for _ in 0..(step.re.abs() + step.im.abs()) {
             pos += dir;
-            if !visited.insert((pos.re, pos.im)) {
+            if first_double_location & !visited.insert((pos.re, pos.im)) {
                 return pos.re.abs() + pos.im.abs();
             }
         }
