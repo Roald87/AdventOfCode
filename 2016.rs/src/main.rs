@@ -3,8 +3,8 @@ use num::complex::Complex;
 
 fn main() {
     let instructions = read_lines("day01.txt");
-    println!("part a: {:?}", day01(&instructions, false)); // part a: 243
-    println!("part b: {:?}", day01(&instructions, true)); // part b: 142
+    println!("part a: {:?}", day01(&instructions, false));
+    println!("part b: {:?}", day01(&instructions, true));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -48,4 +48,17 @@ fn day01(instructions: &[String], first_double_location: bool) -> i32 {
         }
     }
     pos.re.abs() + pos.im.abs()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_day01_real_data() {
+        let instructions = read_lines("day01.txt");
+
+        assert_eq!(day01(&instructions, false), 243, "Part a is not correct.");
+        assert_eq!(day01(&instructions, true), 142, "Part b is not correct.");
+    }
 }
