@@ -19,8 +19,8 @@ fn read_lines(fname: &str) -> Vec<String> {
 fn parse_step(instruction: &str) -> (Complex<i32>, i32) {
     let (turn, n) = instruction.split_at(1);
     let direction = match turn {
-        "R" => Complex::new(0, -1),
-        "L" => Complex::new(0, 1),
+        "R" => Complex::new(0, 1),
+        "L" => Complex::new(0, -1),
         _ => panic!("Unexpected input {}", instruction),
     };
     (direction, n.parse().unwrap())
