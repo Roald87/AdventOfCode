@@ -1,4 +1,5 @@
 use num::complex::Complex;
+use num::integer::Roots;
 use std::{collections::HashSet, fs::read_to_string};
 
 fn main() {
@@ -64,38 +65,36 @@ fn read_lines_day02(fname: &str) -> Vec<String> {
 }
 
 #[rustfmt::skip]
-const KEYPAD_A: [[&str; 3]; 3] = [
-    ["1", "2", "3"], 
-    ["4", "5", "6"], 
-    ["7", "8", "9"]
+const KEYPAD_A: [&str; 9] = [
+    "1", "2", "3",
+    "4", "5", "6",
+    "7", "8", "9",
 ];
 
 #[rustfmt::skip]
-const KEYPAD_B: [[&str; 5]; 5] = [
-    ["0", "0", "1", "0", "0"],
-    ["0", "2", "3", "4", "0"],
-    ["5", "6", "7", "8", "9"],
-    ["0", "A", "B", "C", "0"],
-    ["0", "0", "D", "0", "0"],
+const KEYPAD_B: [&str; 25] = [
+    "0", "0", "1", "0", "0",
+    "0", "2", "3", "4", "0",
+    "5", "6", "7", "8", "9",
+    "0", "A", "B", "C", "0",
+    "0", "0", "D", "0", "0",
 ];
 
 fn move_keypad<const N: usize>(
     curr_pos: (usize, usize),
     direction: char,
-    keypad: &[[&str; N]; N],
+    keypad: &[&str; N],
 ) -> (usize, usize) {
+    let size = N.sqrt();
     let new_pos = match direction {
-        'D' => (curr_pos.0 + 1, curr_pos.1),
+        'D' => ((curr_pos.0 + 1).clamp(0, size - 1), curr_pos.1),
         'U' => (curr_pos.0.saturating_sub(1), curr_pos.1),
         'L' => (curr_pos.0, curr_pos.1.saturating_sub(1)),
-        'R' => (curr_pos.0, curr_pos.1 + 1),
+        'R' => (curr_pos.0, (curr_pos.1 + 1).clamp(0, size - 1)),
         _ => panic!("Invalid direction {}", direction),
     };
 
-    let key = keypad
-        .get(new_pos.0)
-        .and_then(|row| row.get(new_pos.1))
-        .map(|&key| key);
+    let key = keypad.get(new_pos.0 * size + new_pos.1).copied();
     if key == Some("0") || key == None {
         curr_pos
     } else {
@@ -105,7 +104,7 @@ fn move_keypad<const N: usize>(
 
 fn day02<const N: usize>(
     instructions: &[String],
-    keypad: &[[&str; N]; N],
+    keypad: &[&str; N],
     start: (usize, usize),
 ) -> String {
     let mut curr_pos = start;
@@ -114,7 +113,11 @@ fn day02<const N: usize>(
         for direction in instruction.chars() {
             curr_pos = move_keypad(curr_pos, direction, keypad);
         }
-        code.push_str(&keypad[curr_pos.0][curr_pos.1].to_string());
+        code.push_str(
+            keypad
+                .get(curr_pos.0 * (N.sqrt()) + curr_pos.1)
+                .unwrap_or(&""),
+        );
     }
 
     code
