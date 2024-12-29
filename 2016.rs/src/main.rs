@@ -1,11 +1,11 @@
-use std::{collections::HashSet, fs::read_to_string};
 use num::complex::Complex;
+use std::{collections::HashSet, fs::read_to_string};
 
 fn main() {
     let instructions = read_lines("day01.txt");
     println!("part 1a: {:?}", day01(&instructions, false));
     println!("part 1b: {:?}", day01(&instructions, true));
-    
+
     let instructions = read_lines_day02("day02.txt");
     println!("part 2a: {:?}", day02(&instructions, &KEYPAD_A, (1, 1)));
     println!("part 2b: {:?}", day02(&instructions, &KEYPAD_B, (2, 0)));
@@ -54,7 +54,7 @@ fn day01(instructions: &[String], first_double_location: bool) -> i32 {
     pos.re.abs() + pos.im.abs()
 }
 
-fn read_lines_day02(fname: &str) -> Vec<String>{
+fn read_lines_day02(fname: &str) -> Vec<String> {
     read_to_string(fname)
         .unwrap()
         .trim()
@@ -63,50 +63,55 @@ fn read_lines_day02(fname: &str) -> Vec<String>{
         .collect()
 }
 
-const KEYPAD_A: [[&str; 3]; 3] =
-    [
-        ["1", "2", "3"],
-        ["4", "5", "6"],
-        ["7", "8", "9"],
-    ];
+#[rustfmt::skip]
+const KEYPAD_A: [[&str; 3]; 3] = [
+    ["1", "2", "3"], 
+    ["4", "5", "6"], 
+    ["7", "8", "9"]
+];
 
-const KEYPAD_B: [[&str; 5]; 5] =
-    [
-        ["0", "0", "1", "0", "0"],
-        ["0", "2", "3", "4", "0"],
-        ["5", "6", "7", "8", "9"],
-        ["0", "A", "B", "C", "0"],
-        ["0", "0", "D", "0", "0"],
-    ];    
+#[rustfmt::skip]
+const KEYPAD_B: [[&str; 5]; 5] = [
+    ["0", "0", "1", "0", "0"],
+    ["0", "2", "3", "4", "0"],
+    ["5", "6", "7", "8", "9"],
+    ["0", "A", "B", "C", "0"],
+    ["0", "0", "D", "0", "0"],
+];
 
-    
 fn move_keypad<const N: usize>(
-    curr_pos: (usize, usize), 
-    direction: char, 
+    curr_pos: (usize, usize),
+    direction: char,
     keypad: &[[&str; N]; N],
-) -> (usize, usize){
+) -> (usize, usize) {
     let new_pos = match direction {
-        'D' => (curr_pos.0 + 1, curr_pos.1), 
+        'D' => (curr_pos.0 + 1, curr_pos.1),
         'U' => (curr_pos.0.saturating_sub(1), curr_pos.1),
-        'L' => (curr_pos.0, curr_pos.1.saturating_sub(1)), 
-        'R' => (curr_pos.0, curr_pos.1 + 1), 
+        'L' => (curr_pos.0, curr_pos.1.saturating_sub(1)),
+        'R' => (curr_pos.0, curr_pos.1 + 1),
         _ => panic!("Invalid direction {}", direction),
     };
 
-    let key = keypad.get(new_pos.0).and_then(|row| row.get(new_pos.1)).map(|&key| key);
-    if key == Some("0") || key == None  {
+    let key = keypad
+        .get(new_pos.0)
+        .and_then(|row| row.get(new_pos.1))
+        .map(|&key| key);
+    if key == Some("0") || key == None {
         curr_pos
-    }
-    else {
+    } else {
         new_pos
     }
 }
 
-fn day02<const N: usize>(instructions: &[String], keypad: &[[&str; N]; N], start: (usize, usize)) -> String{
+fn day02<const N: usize>(
+    instructions: &[String],
+    keypad: &[[&str; N]; N],
+    start: (usize, usize),
+) -> String {
     let mut curr_pos = start;
     let mut code = String::new();
-    for instruction in instructions{
-        for direction in instruction.chars(){
+    for instruction in instructions {
+        for direction in instruction.chars() {
             curr_pos = move_keypad(curr_pos, direction, keypad);
         }
         code.push_str(&keypad[curr_pos.0][curr_pos.1].to_string());
@@ -123,23 +128,47 @@ mod tests {
     fn test_day01_real_data() {
         let instructions = read_lines("day01.txt");
 
-        assert_eq!(day01(&instructions, false), 243, "Part 1a with real data is not correct.");
-        assert_eq!(day01(&instructions, true), 142, "Part 1b with real data is not correct.");
+        assert_eq!(
+            day01(&instructions, false),
+            243,
+            "Part 1a with real data is not correct."
+        );
+        assert_eq!(
+            day01(&instructions, true),
+            142,
+            "Part 1b with real data is not correct."
+        );
     }
 
     #[test]
     fn test_day02_test_data() {
         let instructions = read_lines_day02("day02-ex.txt");
 
-        assert_eq!(day02(&instructions, &KEYPAD_A, (1, 1)), "1985", "Part 2a with test data is not correct.");
-        assert_eq!(day02(&instructions, &KEYPAD_B, (2, 0)), "5DB3", "Part 2b with test data is not correct.");
+        assert_eq!(
+            day02(&instructions, &KEYPAD_A, (1, 1)),
+            "1985",
+            "Part 2a with test data is not correct."
+        );
+        assert_eq!(
+            day02(&instructions, &KEYPAD_B, (2, 0)),
+            "5DB3",
+            "Part 2b with test data is not correct."
+        );
     }
 
     #[test]
     fn test_day02_real_data() {
         let instructions = read_lines_day02("day02.txt");
 
-        assert_eq!(day02(&instructions, &KEYPAD_A, (1, 1)), "84452", "Part 2a with real data is not correct.");
-        assert_eq!(day02(&instructions, &KEYPAD_B, (2, 0)), "D65C3", "Part 2b with real data is not correct.");
+        assert_eq!(
+            day02(&instructions, &KEYPAD_A, (1, 1)),
+            "84452",
+            "Part 2a with real data is not correct."
+        );
+        assert_eq!(
+            day02(&instructions, &KEYPAD_B, (2, 0)),
+            "D65C3",
+            "Part 2b with real data is not correct."
+        );
     }
 }
