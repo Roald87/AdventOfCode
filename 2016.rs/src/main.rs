@@ -80,12 +80,12 @@ const KEYPAD_B: [&str; 25] = [
     "0", "0", "D", "0", "0",
 ];
 
-fn move_keypad<const N: usize>(
+fn move_keypad(
     curr_pos: (usize, usize),
     direction: char,
-    keypad: &[&str; N],
+    keypad: &[&str],
 ) -> (usize, usize) {
-    let size = N.sqrt();
+    let size = keypad.len().sqrt();
     let new_pos = match direction {
         'D' => ((curr_pos.0 + 1).clamp(0, size - 1), curr_pos.1),
         'U' => (curr_pos.0.saturating_sub(1), curr_pos.1),
@@ -102,24 +102,16 @@ fn move_keypad<const N: usize>(
     }
 }
 
-fn day02<const N: usize>(
-    instructions: &[String],
-    keypad: &[&str; N],
-    start: (usize, usize),
-) -> String {
+fn day02(instructions: &[String], keypad: &[&str], start: (usize, usize)) -> String {
     let mut curr_pos = start;
+    let size = keypad.len().sqrt();
     let mut code = String::new();
     for instruction in instructions {
         for direction in instruction.chars() {
             curr_pos = move_keypad(curr_pos, direction, keypad);
         }
-        code.push_str(
-            keypad
-                .get(curr_pos.0 * (N.sqrt()) + curr_pos.1)
-                .unwrap_or(&""),
-        );
+        code.push_str(keypad[curr_pos.0 * size + curr_pos.1]);
     }
-
     code
 }
 
