@@ -10,6 +10,10 @@ fn main() {
     let instructions = read_lines_day02("day02.txt");
     println!("part 2a: {:?}", day02(&instructions, &KEYPAD_A, (1, 1)));
     println!("part 2b: {:?}", day02(&instructions, &KEYPAD_B, (2, 0)));
+
+    let side_lengths = read_lines_day03("day03.txt");
+    println!("part 3a: {:?}", day03(&side_lengths));
+    println!("part 3b: {:?}", day03b(&side_lengths));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -80,11 +84,7 @@ const KEYPAD_B: [&str; 25] = [
     "0", "0", "D", "0", "0",
 ];
 
-fn move_keypad(
-    curr_pos: (usize, usize),
-    direction: char,
-    keypad: &[&str],
-) -> (usize, usize) {
+fn move_keypad(curr_pos: (usize, usize), direction: char, keypad: &[&str]) -> (usize, usize) {
     let size = keypad.len().sqrt();
     let new_pos = match direction {
         'D' => ((curr_pos.0 + 1).clamp(0, size - 1), curr_pos.1),
@@ -113,6 +113,61 @@ fn day02(instructions: &[String], keypad: &[&str], start: (usize, usize)) -> Str
         code.push_str(keypad[curr_pos.0 * size + curr_pos.1]);
     }
     code
+}
+
+fn read_lines_day03(fname: &str) -> Vec<Vec<i32>> {
+    read_to_string(fname)
+        .unwrap()
+        .lines()
+        .map(|x| x.split_whitespace().map(|n| n.parse::<i32>().unwrap()))
+        .map(|n| n.collect())
+        .collect()
+}
+
+fn day03(side_lengths: &Vec<Vec<i32>>) -> usize {
+    side_lengths
+        .iter()
+        .map(|sides| {
+            let mut sorted_sides = sides.clone();
+            sorted_sides.sort();
+            sorted_sides
+        })
+        .filter(|sides| sides[0] + sides[1] > sides[2])
+        .count()
+}
+
+// https://stackoverflow.com/a/64499219/6329629
+fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
+    assert!(!v.is_empty());
+    let len = v[0].len();
+    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
+    (0..len)
+        .map(|_| {
+            iters
+                .iter_mut()
+                .map(|n| n.next().unwrap())
+                .collect::<Vec<T>>()
+        })
+        .collect()
+}
+
+fn day03b(side_lengths: &Vec<Vec<i32>>) -> usize {
+    let sides_tranposed = transpose(side_lengths.to_vec());
+    sides_tranposed
+        .into_iter()
+        .map(|row| {
+            row.chunks(3)
+                .map(|sides| {
+                    let mut sorted_sides = sides.to_vec();
+                    sorted_sides.sort();
+                    sorted_sides.to_vec();
+                    sorted_sides[0] + sorted_sides[1] > sorted_sides[2]
+                })
+                .collect::<Vec<bool>>()
+        })
+        .flatten()
+        .filter(|&sides| sides)
+        .count()
 }
 
 #[cfg(test)]
@@ -164,6 +219,30 @@ mod tests {
             day02(&instructions, &KEYPAD_B, (2, 0)),
             "D65C3",
             "Part 2b with real data is not correct."
+        );
+    }
+
+    #[test]
+    fn test_day03_test_data() {
+        assert_eq!(day03(&vec![vec![5, 10, 25]]), 0, "test 1 incorrect");
+        assert_eq!(day03(&vec![vec![5, 15, 25]]), 0, "test 2 incorrect");
+        assert_eq!(day03(&vec![vec![10, 16, 25]]), 1, "test 3 incorrect");
+        assert_eq!(day03(&vec![vec![25, 15, 10]]), 0, "test 4 incorrect");
+    }
+
+    #[test]
+    fn test_day03_real_data() {
+        let side_lengths = read_lines_day03("day03.txt");
+
+        assert_eq!(
+            day03(&side_lengths),
+            982,
+            "Part 3a with real data not correct"
+        );
+        assert_eq!(
+            day03b(&side_lengths),
+            1826,
+            "Part 3b with real data not correct"
         );
     }
 }
