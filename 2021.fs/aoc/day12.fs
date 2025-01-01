@@ -7,10 +7,7 @@ open Utilities
 
 module Day12 =
 
-    let parseInput =
-        File.ReadLines
-        >> Seq.toList
-        >> List.map (split "-")
+    let parseInput = File.ReadLines >> Seq.toList >> List.map (split "-")
 
     let caveMapper input : Map<string, list<string>> =
         input @ (input |> List.map List.rev)

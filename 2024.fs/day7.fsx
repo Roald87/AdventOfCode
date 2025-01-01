@@ -41,7 +41,7 @@ open System.IO
 //                     | head :: tail -> head, (tail |> List.toSeq)
 //                     | _ -> failwith "List of numbers too short"
 
-//                 (Seq.zip tail op) 
+//                 (Seq.zip tail op)
 //                 |> Seq.reduce (fun (n, f) -> f head n )
 //                 |> Seq.exists (fun a -> a = ans)
 //         )
@@ -68,7 +68,7 @@ type Operator =
     | Mul
     | Concat
 
-let evaluateOperator acc cur operation=
+let evaluateOperator acc cur operation =
     match operation with
     | Add -> acc + cur
     | Mul -> acc * cur
@@ -81,7 +81,7 @@ let hasSolution equation operators =
         | [] -> acc = equation.testNumber
         | head :: tail ->
             operators
-            |> Seq.map (evaluateOperator acc head) 
+            |> Seq.map (evaluateOperator acc head)
             |> Seq.exists (resolveEquation tail)
 
     resolveEquation equation.stepNumbers 0UL

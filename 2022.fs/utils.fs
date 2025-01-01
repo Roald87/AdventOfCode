@@ -2,7 +2,7 @@ open System.IO
 
 module utils =
 
-    let split (sep:string) (str:string) = str.Split(sep)
+    let split (sep: string) (str: string) = str.Split(sep)
 
     let trim (str: string) = str.Trim()
 

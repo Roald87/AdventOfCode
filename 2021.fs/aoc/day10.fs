@@ -9,11 +9,7 @@ module Day10 =
     let parseInput = File.ReadLines >> Seq.toList
 
     let replacePossibleMatchingBraces (line: string) =
-        line
-            .Replace("()", "")
-            .Replace("[]", "")
-            .Replace("<>", "")
-            .Replace("{}", "")
+        line.Replace("()", "").Replace("[]", "").Replace("<>", "").Replace("{}", "")
 
     let removeAllMatchingBraces (line: string) =
         let rec removeBraces (line: string) =
@@ -27,8 +23,7 @@ module Day10 =
         removeBraces line
 
     let firstInvalidClosingBrace (line: string) =
-        let i =
-            line.IndexOfAny([| '}'; '>'; ']'; ')' |])
+        let i = line.IndexOfAny([| '}'; '>'; ']'; ')' |])
 
         match i with
         | -1 -> None
@@ -36,17 +31,15 @@ module Day10 =
 
     let valueClosingBrackets (bracket: char option) =
         match bracket with
-        | Some (')') -> 3
-        | Some (']') -> 57
-        | Some ('}') -> 1197
-        | Some ('>') -> 25137
+        | Some(')') -> 3
+        | Some(']') -> 57
+        | Some('}') -> 1197
+        | Some('>') -> 25137
         | _ -> 0
 
     let part1 =
         List.map (
-            removeAllMatchingBraces
-            >> firstInvalidClosingBrace
-            >> valueClosingBrackets
+            removeAllMatchingBraces >> firstInvalidClosingBrace >> valueClosingBrackets
         )
         >> List.sum
 

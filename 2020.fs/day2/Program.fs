@@ -15,10 +15,8 @@ let validPassword (chr, min, max, (password: string)) =
 
 let validPassword2 (chr, first, second, (password: string)) =
     try
-        (password.[first - 1] = chr)
-        <> (password.[second - 1] = chr)
-    with
-    | :? System.IndexOutOfRangeException ->
+        (password.[first - 1] = chr) <> (password.[second - 1] = chr)
+    with :? System.IndexOutOfRangeException ->
         printfn "Index out of range"
         false
 
@@ -34,10 +32,7 @@ let main argv =
         chr, minMax.[0], minMax.[1], password
 
     let validPasswords =
-        readInput
-        |> List.map parseInput
-        |> List.filter validPassword2
-        |> List.length
+        readInput |> List.map parseInput |> List.filter validPassword2 |> List.length
 
     printfn "Valid passes: %i" validPasswords
     0 // return an integer exit code

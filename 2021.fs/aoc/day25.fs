@@ -5,8 +5,7 @@ open System.IO
 open Utilities
 
 module Day25 =
-    let parseInput =
-        File.ReadLines >> Seq.map stringToChars >> array2D
+    let parseInput = File.ReadLines >> Seq.map stringToChars >> array2D
 
     let moveEast input =
         let _, w = size input

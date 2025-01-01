@@ -107,12 +107,12 @@ def part1(inp):
     return np.max(numbered_input)
 
 
-def part2(inp):
-    numbered_input = np.zeros((len(inp), len(inp[0])), dtype=int)
-    for row in inp:
-        for col in row:
-            if
-    return 0
+# def part2(inp):
+#     numbered_input = np.zeros((len(inp), len(inp[0])), dtype=int)
+#     for row in inp:
+#         for col in row:
+#             if
+#     return 0
 
 
 if __name__ == "__main__":

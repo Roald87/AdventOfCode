@@ -7,19 +7,13 @@ open Utilities
 module Day9 =
     let parseInput =
         File.ReadLines
-        >> Seq.map (
-            stringToChars
-            >> Seq.map (fun x -> int (x) - int ('0'))
-        )
+        >> Seq.map (stringToChars >> Seq.map (fun x -> int (x) - int ('0')))
         >> array2D
 
     let selectNeighbours maxX maxY c =
         let x, y = c
 
-        [ x - 1, y
-          x + 1, y
-          x, y - 1
-          x, y + 1 ]
+        [ x - 1, y; x + 1, y; x, y - 1; x, y + 1 ]
         |> List.filter (fun (x, y) -> (x >= 0 && x <= maxX && y >= 0 && y <= maxY))
 
     let array2DSize arr =
@@ -27,7 +21,7 @@ module Day9 =
         let height = (arr |> Array2D.length2) - 1
         width, height
 
-    let lowestPoints (heightMap: int [,]) =
+    let lowestPoints (heightMap: int[,]) =
         let maxX, maxY = array2DSize heightMap
 
         heightMap
@@ -52,11 +46,9 @@ module Day9 =
 
         let rec growPatch currentPatch neighboursToCheck =
             let neightboursPartOfPatch =
-                neighboursToCheck
-                |> Set.filter (fun (i, j) -> input.[i, j] < 9)
+                neighboursToCheck |> Set.filter (fun (i, j) -> input.[i, j] < 9)
 
-            let newPatch =
-                neightboursPartOfPatch |> Set.union currentPatch
+            let newPatch = neightboursPartOfPatch |> Set.union currentPatch
 
             let newNeighbours =
                 neightboursPartOfPatch

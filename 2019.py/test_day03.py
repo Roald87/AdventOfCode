@@ -12,6 +12,7 @@ def test_intersections():
 
     assert_that(testcrossings).is_equal_to([(7, 6), (4, 4)])
 
+
 def test_distance():
     crossings = [(7, 6), (4, 4)]
     testwires = read_input("test03")

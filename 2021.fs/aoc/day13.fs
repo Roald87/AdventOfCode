@@ -32,14 +32,11 @@ module Day13 =
     let readDots input =
         let dots = dotPositions input
 
-        let width =
-            dots |> List.map (fun x -> x.[0]) |> List.max
+        let width = dots |> List.map (fun x -> x.[0]) |> List.max
 
-        let height =
-            dots |> List.map (fun x -> x.[1]) |> List.max
+        let height = dots |> List.map (fun x -> x.[1]) |> List.max
 
-        let paper =
-            Array2D.zeroCreate (height + 1) (width + 1)
+        let paper = Array2D.zeroCreate (height + 1) (width + 1)
 
         for dot in dots do
             paper.[dot.[1], dot.[0]] <- 1
@@ -57,15 +54,15 @@ module Day13 =
         let heigth, width = size arr
         Array2D.init heigth width (fun i j -> arr.[Math.Abs(i - heigth + 1), j])
 
-    let elementWiseAdd (arr1: int [,]) (arr2: int [,]) =
+    let elementWiseAdd (arr1: int[,]) (arr2: int[,]) =
         let heigth, width = size arr1
         Array2D.init heigth width (fun i j -> arr1.[i, j] + arr2.[i, j])
 
-    let fold line (paper: int [,]) =
+    let fold line (paper: int[,]) =
         let side1, side2 =
             match line with
-            | X x -> paper.[*, ..x - 1], mirrorX paper.[*, x + 1..]
-            | Y y -> paper.[..y - 1, *], mirrorY paper.[y + 1.., *]
+            | X x -> paper.[*, .. x - 1], mirrorX paper.[*, x + 1 ..]
+            | Y y -> paper.[.. y - 1, *], mirrorY paper.[y + 1 .., *]
 
         elementWiseAdd side1 side2
 
@@ -73,7 +70,7 @@ module Day13 =
         let rec doFold (foldingPaper: int[,]) (instructions: seq<Fold>) =
             match instructions |> Seq.toList with
             | [] -> foldingPaper
-            | head::tail -> doFold (fold head foldingPaper) tail
+            | head :: tail -> doFold (fold head foldingPaper) tail
 
         doFold foldingPaper instructions
 
@@ -86,6 +83,7 @@ module Day13 =
         let foldedPaper = doFolding (readDots input) (foldInstructions input)
 
         let widthArr = foldedPaper |> Array2D.length1
+
         foldedPaper
         |> Seq.cast<int>
         |> Seq.map (fun x -> if x >= 1 then "█" else " ")

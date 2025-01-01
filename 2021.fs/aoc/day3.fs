@@ -18,14 +18,10 @@ module Day3 =
 
     let charArrayToInts = List.map (fun x -> int (x) - 48)
 
-    let stringToInts =
-        Seq.map Seq.toList >> Seq.map charArrayToInts
+    let stringToInts = Seq.map Seq.toList >> Seq.map charArrayToInts
 
     let mostCommonDigit (lst: string list) =
-        lst
-        |> stringToInts
-        |> elementWiseSum
-        |> Seq.map (fun x -> x > lst.Length / 2)
+        lst |> stringToInts |> elementWiseSum |> Seq.map (fun x -> x > lst.Length / 2)
 
     let leastCommonDigit = mostCommonDigit >> Seq.map not
 
@@ -35,13 +31,10 @@ module Day3 =
 
     let mostCommonDigitsAsInt = mostCommonDigit >> boolsToDecimal
 
-    let leastCommonDigitsAsInt =
-        mostCommonDigit >> Seq.map not >> boolsToDecimal
+    let leastCommonDigitsAsInt = mostCommonDigit >> Seq.map not >> boolsToDecimal
 
     let countOnesAtPosition (pos: int) (lst: string list) =
-        lst
-        |> List.filter (fun x -> x.[pos] = '1')
-        |> List.length
+        lst |> List.filter (fun x -> x.[pos] = '1') |> List.length
 
     let oxygen lst =
         let rec mostCommon iteration rest =
@@ -59,10 +52,7 @@ module Day3 =
 
             match rest.Length with
             | 1 -> rest.[0]
-            | l when
-                l % 2 = 0
-                && (countOnesAtPosition iteration rest = l / 2)
-                ->
+            | l when l % 2 = 0 && (countOnesAtPosition iteration rest = l / 2) ->
                 mostCommon
                     (iteration + 1)
                     (rest |> List.filter (fun x -> x.[iteration] = '1'))
@@ -70,7 +60,8 @@ module Day3 =
                 mostCommon
                     (iteration + 1)
                     (rest
-                    |> List.filter (fun x -> x.[iteration] = (summedDigits.[iteration])))
+                     |> List.filter (fun x ->
+                         x.[iteration] = (summedDigits.[iteration])))
 
         Convert.ToInt32(mostCommon 0 lst, 2)
 
@@ -90,10 +81,7 @@ module Day3 =
 
             match rest.Length with
             | 1 -> rest.[0]
-            | l when
-                l % 2 = 0
-                && (countOnesAtPosition iteration rest = l / 2)
-                ->
+            | l when l % 2 = 0 && (countOnesAtPosition iteration rest = l / 2) ->
                 leastCommon
                     (iteration + 1)
                     (rest |> List.filter (fun x -> x.[iteration] = '0'))
@@ -101,6 +89,7 @@ module Day3 =
                 leastCommon
                     (iteration + 1)
                     (rest
-                    |> List.filter (fun x -> x.[iteration] = (summedDigits.[iteration])))
+                     |> List.filter (fun x ->
+                         x.[iteration] = (summedDigits.[iteration])))
 
         Convert.ToInt32(leastCommon 0 lst, 2)

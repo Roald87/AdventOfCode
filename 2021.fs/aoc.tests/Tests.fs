@@ -14,23 +14,20 @@ let ``day 1 part 2 real data`` () =
 let ``day 2 part 2 real data`` () =
     let movement = Day2.part2 "assets/input2.txt"
 
-    movement.Horizontal * movement.Vertical
-    |> should equal 1971095320L
+    movement.Horizontal * movement.Vertical |> should equal 1971095320L
 
 [<Fact>]
 let ``day 3 part 1 real data`` () =
     let input = Day3.read "assets/input3.txt"
 
-    Day3.mostCommonDigitsAsInt input
-    * Day3.leastCommonDigitsAsInt input
+    Day3.mostCommonDigitsAsInt input * Day3.leastCommonDigitsAsInt input
     |> should equal 738234
 
 [<Fact>]
 let ``day 3 part 2 real data`` () =
     let input = Day3.read "assets/input3.txt"
 
-    Day3.oxygen input * Day3.co2 input
-    |> should equal 3969126
+    Day3.oxygen input * Day3.co2 input |> should equal 3969126
 
 [<Fact>]
 let ``day 3 part test data oxygen`` () =
@@ -49,16 +46,14 @@ let ``day 4 part 1 real data`` () =
     let myDraws = Day4.draws "assets/input4.txt"
     let myBoards = Day4.boards "assets/input4.txt"
 
-    Day4.firstToWin myDraws myBoards
-    |> should equal 49860
+    Day4.firstToWin myDraws myBoards |> should equal 49860
 
 [<Fact>]
 let ``day 4 part 2 real data`` () =
     let myDraws = Day4.draws "assets/input4.txt"
     let myBoards = Day4.boards "assets/input4.txt"
 
-    Day4.lastToWin myDraws myBoards
-    |> should equal 24628
+    Day4.lastToWin myDraws myBoards |> should equal 24628
 
 [<Fact>]
 let ``day 5 part 1 test data`` () =
@@ -90,8 +85,7 @@ let ``Day 6 part 1 large numbers `` () =
 
     Day6.simFishSchool 18UL input |> should equal 26UL
 
-    Day6.simFishSchool 80UL input
-    |> should equal 5934UL
+    Day6.simFishSchool 80UL input |> should equal 5934UL
 
 [<Fact>]
 let ``Day 8 part 1`` () =
@@ -167,8 +161,7 @@ let ``Day 12 part 2 real data`` () =
 
 [<Fact>]
 let ``Day 13 part 1 real data`` () =
-    Day13.part1 "assets/input13.txt"
-    |> should equal 745
+    Day13.part1 "assets/input13.txt" |> should equal 745
 
 [<Fact>]
 let ``Day 13 part 2 real data`` () =
@@ -184,24 +177,20 @@ let ``Day 13 part 2 real data`` () =
 
 [<Fact>]
 let ``Day 14 part 1 real data`` () =
-    Day14.part1 "assets/input14.txt"
-    |> should equal 3555
+    Day14.part1 "assets/input14.txt" |> should equal 3555
 
 [<Fact>]
 let ``Day 15 part 1 real data`` () =
-    let input =
-        System.IO.File.ReadAllText "assets/input15.txt"
+    let input = System.IO.File.ReadAllText "assets/input15.txt"
 
     Day15.part2 input |> should equal 540
 
 [<Fact>]
 let ``Day 15 part 2 test data`` () =
-    let input =
-        System.IO.File.ReadAllText "assets/test15.txt"
+    let input = System.IO.File.ReadAllText "assets/test15.txt"
 
     Day15.part2 input |> should equal 315
 
 [<Fact>]
 let ``Day 25 part 1 real data`` () =
-    Day25.part1 "assets/input25.txt"
-    |> should equal 360
+    Day25.part1 "assets/input25.txt" |> should equal 360

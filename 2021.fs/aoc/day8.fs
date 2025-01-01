@@ -7,9 +7,7 @@ open Utilities
 module Day8 =
 
     let parseInput =
-        File.ReadLines
-        >> Seq.toList
-        >> List.map (split "|" >> List.map (split " "))
+        File.ReadLines >> Seq.toList >> List.map (split "|" >> List.map (split " "))
 
     let part1 (text: string list list list) =
         text
@@ -23,22 +21,16 @@ module Day8 =
     let stringToCharSet = Seq.toArray >> Set.ofSeq
 
     let firstOfLength n (lst: string list) =
-        lst
-        |> List.filter (fun x -> x.Length = n)
-        |> List.head
+        lst |> List.filter (fun x -> x.Length = n) |> List.head
 
     let findWiring letters =
-        let one =
-            letters |> firstOfLength 2 |> stringToCharSet
+        let one = letters |> firstOfLength 2 |> stringToCharSet
 
-        let four =
-            letters |> firstOfLength 4 |> stringToCharSet
+        let four = letters |> firstOfLength 4 |> stringToCharSet
 
-        let seven =
-            letters |> firstOfLength 3 |> stringToCharSet
+        let seven = letters |> firstOfLength 3 |> stringToCharSet
 
-        let eight =
-            letters |> firstOfLength 7 |> stringToCharSet
+        let eight = letters |> firstOfLength 7 |> stringToCharSet
 
         let otherNumbers =
             letters
@@ -56,28 +48,19 @@ module Day8 =
             >> List.filter (fun x -> x.Count = 1)
             >> List.head
 
-        let g =
-            getMappedChar (seven + four) otherNumbers.[6]
+        let g = getMappedChar (seven + four) otherNumbers.[6]
 
         let e = e_and_g - g
 
-        let b =
-            getMappedChar (one + a + e_and_g) otherNumbers.[6]
+        let b = getMappedChar (one + a + e_and_g) otherNumbers.[6]
 
         let d = b_and_d - b
 
-        let f =
-            getMappedChar (a + b + d + e + g) otherNumbers.[6]
+        let f = getMappedChar (a + b + d + e + g) otherNumbers.[6]
 
         let c = c_and_f - f
 
-        [ a, 'a'
-          b, 'b'
-          c, 'c'
-          d, 'd'
-          e, 'e'
-          f, 'f'
-          g, 'g' ]
+        [ a, 'a'; b, 'b'; c, 'c'; d, 'd'; e, 'e'; f, 'f'; g, 'g' ]
         |> List.map (fun (k, v) -> (k.MaximumElement, v))
         |> Map.ofList
 
@@ -106,13 +89,9 @@ module Day8 =
         | _ -> -1
 
     let numberListToDecimal =
-        List.rev
-        >> List.mapi (fun i x -> 10.0 ** (float i) * float (x))
+        List.rev >> List.mapi (fun i x -> 10.0 ** (float i) * float (x))
 
     let translateToNumber =
-        translate
-        >> List.map segmentLettersToInt
-        >> numberListToDecimal
-        >> List.sum
+        translate >> List.map segmentLettersToInt >> numberListToDecimal >> List.sum
 
     let part2 = List.map translateToNumber >> List.sum

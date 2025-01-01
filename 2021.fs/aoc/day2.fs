@@ -3,7 +3,7 @@ namespace aoc
 open System.IO
 
 module Day2 =
-    
+
     let read = File.ReadLines >> Seq.toList
 
     let separate (str: string) = str.Split(" ") |> Array.toList
@@ -23,8 +23,7 @@ module Day2 =
         | [ "forward"; _ ] ->
             { Horizontal = movementSoFar.Horizontal + int64 (newMove.[1])
               Vertical =
-                movementSoFar.Vertical
-                + movementSoFar.Aim * int64 (newMove.[1])
+                movementSoFar.Vertical + movementSoFar.Aim * int64 (newMove.[1])
               Aim = movementSoFar.Aim }
         | [ "down"; _ ] ->
             { Horizontal = movementSoFar.Horizontal
