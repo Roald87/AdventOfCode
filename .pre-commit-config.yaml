@@ -5,10 +5,42 @@ repos:
     rev: v1.0
     hooks:
     -   id: fmt
+        name: Format 2016.rs
         args: [--manifest-path, 2016.rs/Cargo.toml, --]
+    -   id: clippy
+        name: Run clippy on 2016.rs
+        args: [
+            --allow-dirty,
+            --allow-staged,
+            --manifest-path, 2016.rs/Cargo.toml,
+            --all-targets,
+            --fix,
+            --,
+            -W, "clippy::pedantic",
+            -D, warnings
+        ]
+
+-   repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+    -   id: fmt
+        name: Format 2018.rs
+        args: [--manifest-path, 2018.rs/Cargo.toml, --]
+    -   id: clippy
+        name: Run clippy on 2018.rs
+        args: [
+            --allow-dirty,
+            --allow-staged,
+            --manifest-path, 2018.rs/Cargo.toml,
+            --all-targets,
+            --fix,
+            --,
+            -W, "clippy::pedantic",
+            -D, warnings
+        ]
 
 -   repo: https://github.com/psf/black
-    rev: 23.9.1  # Use the latest stable version
+    rev: 24.10.0  # Use the latest stable version
     hooks:
     - id: black
 

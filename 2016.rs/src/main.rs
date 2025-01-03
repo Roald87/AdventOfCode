@@ -30,7 +30,7 @@ fn parse_step(instruction: &str) -> (Complex<i32>, i32) {
     let direction = match turn {
         "R" => Complex::new(0, 1),
         "L" => Complex::new(0, -1),
-        _ => panic!("Unexpected input {}", instruction),
+        _ => panic!("Unexpected input {instruction}"),
     };
     (direction, n.parse().unwrap())
 }
@@ -47,7 +47,7 @@ fn day01(instructions: &[String], first_double_location: bool) -> i32 {
     let mut visited = HashSet::new();
     visited.insert((pos.re, pos.im));
     for instruction in instructions {
-        let (new_dir, step) = step(dir, &instruction);
+        let (new_dir, step) = step(dir, instruction);
         dir = new_dir;
         for _ in 0..(step.re.abs() + step.im.abs()) {
             pos += dir;
@@ -91,11 +91,11 @@ fn move_keypad(curr_pos: (usize, usize), direction: char, keypad: &[&str]) -> (u
         'U' => (curr_pos.0.saturating_sub(1), curr_pos.1),
         'L' => (curr_pos.0, curr_pos.1.saturating_sub(1)),
         'R' => (curr_pos.0, (curr_pos.1 + 1).clamp(0, size - 1)),
-        _ => panic!("Invalid direction {}", direction),
+        _ => panic!("Invalid direction {direction}"),
     };
 
     let key = keypad.get(new_pos.0 * size + new_pos.1).copied();
-    if key == Some("0") || key == None {
+    if key == Some("0") || key.is_none() {
         curr_pos
     } else {
         new_pos
@@ -120,16 +120,16 @@ fn read_lines_day03(fname: &str) -> Vec<Vec<i32>> {
         .unwrap()
         .lines()
         .map(|x| x.split_whitespace().map(|n| n.parse::<i32>().unwrap()))
-        .map(|n| n.collect())
+        .map(std::iter::Iterator::collect)
         .collect()
 }
 
-fn day03(side_lengths: &Vec<Vec<i32>>) -> usize {
+fn day03(side_lengths: &[Vec<i32>]) -> usize {
     side_lengths
         .iter()
         .map(|sides| {
             let mut sorted_sides = sides.clone();
-            sorted_sides.sort();
+            sorted_sides.sort_unstable();
             sorted_sides
         })
         .filter(|sides| sides[0] + sides[1] > sides[2])
@@ -140,7 +140,10 @@ fn day03(side_lengths: &Vec<Vec<i32>>) -> usize {
 fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
     assert!(!v.is_empty());
     let len = v[0].len();
-    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
+    let mut iters: Vec<_> = v
+        .into_iter()
+        .map(std::iter::IntoIterator::into_iter)
+        .collect();
     (0..len)
         .map(|_| {
             iters
@@ -151,21 +154,19 @@ fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
         .collect()
 }
 
-fn day03b(side_lengths: &Vec<Vec<i32>>) -> usize {
+fn day03b(side_lengths: &[Vec<i32>]) -> usize {
     let sides_tranposed = transpose(side_lengths.to_vec());
     sides_tranposed
         .into_iter()
-        .map(|row| {
+        .flat_map(|row| {
             row.chunks(3)
                 .map(|sides| {
                     let mut sorted_sides = sides.to_vec();
-                    sorted_sides.sort();
-                    sorted_sides.to_vec();
+                    sorted_sides.sort_unstable();
                     sorted_sides[0] + sorted_sides[1] > sorted_sides[2]
                 })
                 .collect::<Vec<bool>>()
         })
-        .flatten()
         .filter(|&sides| sides)
         .count()
 }
@@ -224,10 +225,10 @@ mod tests {
 
     #[test]
     fn test_day03_test_data() {
-        assert_eq!(day03(&vec![vec![5, 10, 25]]), 0, "test 1 incorrect");
-        assert_eq!(day03(&vec![vec![5, 15, 25]]), 0, "test 2 incorrect");
-        assert_eq!(day03(&vec![vec![10, 16, 25]]), 1, "test 3 incorrect");
-        assert_eq!(day03(&vec![vec![25, 15, 10]]), 0, "test 4 incorrect");
+        assert_eq!(day03(&[vec![5, 10, 25]]), 0, "test 1 incorrect");
+        assert_eq!(day03(&[vec![5, 15, 25]]), 0, "test 2 incorrect");
+        assert_eq!(day03(&[vec![10, 16, 25]]), 1, "test 3 incorrect");
+        assert_eq!(day03(&[vec![25, 15, 10]]), 0, "test 4 incorrect");
     }
 
     #[test]
