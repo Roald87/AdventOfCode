@@ -1,0 +1,3 @@
+# fantomas keeps changing the line endings to CRLF despite this
+[*]
+end_of_line = lf
