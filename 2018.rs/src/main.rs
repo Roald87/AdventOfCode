@@ -10,7 +10,7 @@ fn read_lines_day01(fname: &str) -> Vec<i32> {
     read_to_string(fname)
         .unwrap()
         .lines()
-        .map(|s| s.parse::<i32>().unwrap())
+        .map(|line| line.parse::<i32>().unwrap())
         .collect()
 }
 
@@ -24,10 +24,10 @@ fn day01b(nums: &[i32]) -> i32 {
     for n in nums.iter().cycle() {
         total += n;
         if !seen.insert(total) {
-            return total;
+            break;
         }
     }
-    panic!("No value seen")
+    total
 }
 
 #[cfg(test)]
