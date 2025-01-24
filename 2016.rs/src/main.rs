@@ -217,14 +217,12 @@ fn day04a(codes: &Vec<(String, i32, String)>) -> i32 {
 }
 
 fn decrypt_room(room: String, id: i32) -> String {
-    let i = (id % 26) as u8;
+    let shift = (id % 26) as u8;
     room.chars()
-        .map(|c| {
-            if c == '-' {
-                ' '
-            } else {
-                ((c as u8 - b'a' + i) % 26 + b'a') as char
-            }
+        .map(|c| match c {
+            '-' => ' ',
+            c @ 'a'..='z' => (((c as u8 - b'a' + shift) % 26) + b'a') as char,
+            _ => c,
         })
         .collect()
 }
