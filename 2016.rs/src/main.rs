@@ -21,7 +21,8 @@ fn main() {
     println!("part 3b: {:?}", day03b(&side_lengths));
 
     let codes = read_lines_day04("day04.txt");
-    println!("part 4a: {:?}", day04a(codes));
+    println!("part 4a: {:?}", day04a(&codes));
+    println!("part 4b: {:?}", day04b(&codes));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -208,11 +209,34 @@ fn read_lines_day04(fname: &str) -> Vec<(String, i32, String)> {
         .collect()
 }
 
-fn day04a(codes: Vec<(String, i32, String)>) -> i32 {
+fn day04a(codes: &Vec<(String, i32, String)>) -> i32 {
     codes
         .iter()
         .filter_map(|(name, id, checksum)| is_room_real(name, checksum).then_some(*id))
         .sum()
+}
+
+fn decrypt_room(room: String, id: i32) -> String {
+    let a = b'a';
+    let i = (id % 26) as u8;
+    room.chars()
+        .map(|c| {
+            if c == '-' {
+                ' '
+            } else {
+                ((c as u8 - a + i) % 26 + a) as char
+            }
+        })
+        .collect()
+}
+
+fn day04b(codes: &Vec<(String, i32, String)>) -> i32 {
+    for (code, id, _) in codes {
+        if decrypt_room(code.to_string(), *id).starts_with("north") {
+            return *id;
+        }
+    }
+    0
 }
 
 #[cfg(test)]
@@ -299,6 +323,15 @@ mod tests {
     #[test]
     fn test_day04_real_data() {
         let codes = read_lines_day04("day04.txt");
-        assert_eq!(day04a(codes), 409147, "Part 4a with real data not correct");
+        assert_eq!(day04a(&codes), 409147, "Part 4a with real data not correct");
+        assert_eq!(day04b(&codes), 991, "Part 4b with real data not correct");
+    }
+
+    #[test]
+    fn test_day04_test_data() {
+        assert_eq!(
+            decrypt_room("qzmt-zixmtkozy-ivhz".to_string(), 343),
+            "very encrypted name"
+        );
     }
 }
