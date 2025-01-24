@@ -209,13 +209,10 @@ fn read_lines_day04(fname: &str) -> Vec<(String, i32, String)> {
 }
 
 fn day04a(codes: Vec<(String, i32, String)>) -> i32 {
-    codes.iter().fold(0, |acc, (name, id, checksum)| {
-        if is_room_real(name, checksum) {
-            acc + id
-        } else {
-            acc
-        }
-    })
+    codes
+        .iter()
+        .filter_map(|(name, id, checksum)| is_room_real(name, checksum).then_some(*id))
+        .sum()
 }
 
 #[cfg(test)]
