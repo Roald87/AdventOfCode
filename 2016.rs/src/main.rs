@@ -229,15 +229,14 @@ fn decrypt_room(room: String, id: i32) -> String {
         .collect()
 }
 
-fn day04b(codes: &Vec<(String, i32, String)>) -> i32 {
+fn day04b(codes: &[(String, i32, String)]) -> i32 {
     codes
         .iter()
-        .filter_map(|(name, id, _)| {
-            decrypt_room(name.to_string(), *id)
+        .find_map(|(name, id, _)| {
+            decrypt_room(name.clone(), *id)
                 .starts_with("north")
                 .then_some(*id)
         })
-        .next()
         .unwrap()
 }
 
