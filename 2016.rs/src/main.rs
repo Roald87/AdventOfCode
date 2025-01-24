@@ -1,6 +1,11 @@
 use num::complex::Complex;
 use num::integer::Roots;
-use std::{collections::HashSet, fs::read_to_string};
+use regex::Regex;
+use std::{
+    cmp::Reverse,
+    collections::{HashMap, HashSet},
+    fs::read_to_string,
+};
 
 fn main() {
     let instructions = read_lines("day01.txt");
@@ -14,6 +19,9 @@ fn main() {
     let side_lengths = read_lines_day03("day03.txt");
     println!("part 3a: {:?}", day03(&side_lengths));
     println!("part 3b: {:?}", day03b(&side_lengths));
+
+    let codes = read_lines_day04("day04.txt");
+    println!("part 4a: {:?}", day04a(codes));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -171,6 +179,45 @@ fn day03b(side_lengths: &[Vec<i32>]) -> usize {
         .count()
 }
 
+fn is_room_real(name: &str, checksum: &str) -> bool {
+    let counts = name
+        .chars()
+        .filter(|x| *x != '-')
+        .fold(HashMap::new(), |mut acc, c| {
+            acc.entry(c).and_modify(|count| *count += 1).or_insert(1);
+            acc
+        });
+
+    let mut chars: Vec<(&char, &i32)> = counts.iter().collect();
+    chars.sort_by_key(|(k, v)| (Reverse(**v), **k));
+
+    let computed_checksum: String = chars.iter().take(5).map(|(k, _v)| *k).collect();
+
+    checksum == computed_checksum
+}
+
+fn read_lines_day04(fname: &str) -> Vec<(String, i32, String)> {
+    let pattern = Regex::new(r"([a-z-]+)-(\d+)\[([a-z]+)\]").unwrap();
+    let input = read_to_string(fname).unwrap();
+    pattern
+        .captures_iter(&input)
+        .map(|c| {
+            let (_, [code, i, h]) = c.extract();
+            (code.to_string(), i.parse::<i32>().unwrap(), h.to_string())
+        })
+        .collect()
+}
+
+fn day04a(codes: Vec<(String, i32, String)>) -> i32 {
+    codes.iter().fold(0, |acc, (name, id, checksum)| {
+        if is_room_real(name, checksum) {
+            acc + id
+        } else {
+            acc
+        }
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -245,5 +292,16 @@ mod tests {
             1826,
             "Part 3b with real data not correct"
         );
+    }
+
+    #[test]
+    fn room_is_real() {
+        assert!(is_room_real("aaaaa-bbb-z-y-x", "abxyz"));
+    }
+
+    #[test]
+    fn test_day04_real_data() {
+        let codes = read_lines_day04("day04.txt");
+        assert_eq!(day04a(codes), 409147, "Part 4a with real data not correct");
     }
 }
