@@ -230,12 +230,15 @@ fn decrypt_room(room: String, id: i32) -> String {
 }
 
 fn day04b(codes: &Vec<(String, i32, String)>) -> i32 {
-    for (code, id, _) in codes {
-        if decrypt_room(code.to_string(), *id).starts_with("north") {
-            return *id;
-        }
-    }
-    0
+    codes
+        .iter()
+        .filter_map(|(name, id, _)| {
+            decrypt_room(name.to_string(), *id)
+                .starts_with("north")
+                .then_some(*id)
+        })
+        .next()
+        .unwrap()
 }
 
 #[cfg(test)]
