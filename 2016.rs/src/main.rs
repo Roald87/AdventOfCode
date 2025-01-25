@@ -311,7 +311,7 @@ mod tests {
     }
 
     #[test]
-    // #[ignore = "test takes ~17 s"]
+    #[ignore = "test takes 1 min"]
     fn test_day05b() {
         assert_eq!(
             day05b("abc"),
