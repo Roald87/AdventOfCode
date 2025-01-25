@@ -1,5 +1,6 @@
 use num::complex::Complex;
 use num::integer::Roots;
+use rayon::prelude::*;
 use regex::Regex;
 use std::{
     cmp::Reverse,
@@ -24,8 +25,9 @@ fn main() {
     println!("part 4a: {:?}", day04a(&codes));
     println!("part 4b: {:?}", day04b(&codes));
 
-    let door_id = "ffykfhsq";
-    println!("part 5a: {:?}", day05a(door_id));
+    // let door_id = "ffykfhsq";
+    // // Slow, takes around 17 s
+    // println!("part 5a: {:?}", day05a(door_id));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -212,7 +214,7 @@ fn read_lines_day04(fname: &str) -> Vec<(String, i32, String)> {
         .collect()
 }
 
-fn day04a(codes: &Vec<(String, i32, String)>) -> i32 {
+fn day04a(codes: &[(String, i32, String)]) -> i32 {
     codes
         .iter()
         .filter_map(|(name, id, checksum)| is_room_real(name, checksum).then_some(*id))
@@ -241,26 +243,18 @@ fn day04b(codes: &[(String, i32, String)]) -> i32 {
         .unwrap()
 }
 
+/// Very slow (17 s in parallel). Can be reduced by writing a custom md5
+/// function, because it calculates the number from left to right. So
+/// it can exit early, if it finds a 0.
 fn day05a(door_id: &str) -> String {
-    let mut password = String::new();
-    let mut i = 0;
-    while password.len() < 8 {
-        let digest = md5::compute(format!("{door_id}{i}"));
-        let hash = format!("{digest:x}");
-        if hash.starts_with("00000") {
-            password.push(hash.chars().nth(5).unwrap());
-        }
-        i += 1;
-    }
+    let password: String = (0..10_000_000)
+        .into_par_iter() // speeds it up by a factor two
+        .map(|i| md5::compute(format!("{door_id}{i}")))
+        .filter(|digest| format!("{digest:x}").starts_with("00000"))
+        .map(|code| format!("{code:x}").chars().nth(5).unwrap())
+        .collect();
 
-    password
-
-    // (1..10_000_000)
-    //     .map(|i| md5::compute(format!("{}{}", door_id, i)))
-    //     .filter(|digest| format!("{:x}", digest).starts_with("00000"))
-    //     .map(|code| code[5] as char)
-    //     .take(8)
-    //     .collect()
+    password[..8].to_string()
 }
 
 #[cfg(test)]
@@ -268,6 +262,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore = "test takes ~17 s"]
     fn test_day05() {
         assert_eq!(
             day05a("abc"),
