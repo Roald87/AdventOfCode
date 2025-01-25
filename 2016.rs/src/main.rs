@@ -23,6 +23,9 @@ fn main() {
     let codes = read_lines_day04("day04.txt");
     println!("part 4a: {:?}", day04a(&codes));
     println!("part 4b: {:?}", day04b(&codes));
+
+    let door_id = "ffykfhsq";
+    println!("part 5a: {:?}", day05a(door_id));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -238,9 +241,40 @@ fn day04b(codes: &[(String, i32, String)]) -> i32 {
         .unwrap()
 }
 
+fn day05a(door_id: &str) -> String {
+    let mut password = String::new();
+    let mut i = 0;
+    while password.len() < 8 {
+        let digest = md5::compute(format!("{door_id}{i}"));
+        let hash = format!("{digest:x}");
+        if hash.starts_with("00000") {
+            password.push(hash.chars().nth(5).unwrap());
+        }
+        i += 1;
+    }
+
+    password
+
+    // (1..10_000_000)
+    //     .map(|i| md5::compute(format!("{}{}", door_id, i)))
+    //     .filter(|digest| format!("{:x}", digest).starts_with("00000"))
+    //     .map(|code| code[5] as char)
+    //     .take(8)
+    //     .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_day05() {
+        assert_eq!(
+            day05a("abc"),
+            "18f47a30",
+            "Part 5a with test data not correct"
+        );
+    }
 
     #[test]
     fn test_day01_real_data() {
