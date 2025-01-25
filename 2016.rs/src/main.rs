@@ -28,6 +28,8 @@ fn main() {
     // let door_id = "ffykfhsq";
     // // Slow, takes around 17 s
     // println!("part 5a: {:?}", day05a(door_id));
+    // // Slow, takes > 1 min, unoptimized code
+    // println!("part 5b: {:?}", day05b(door_id));
 }
 
 fn read_lines(fname: &str) -> Vec<String> {
@@ -257,17 +259,64 @@ fn day05a(door_id: &str) -> String {
     password[..8].to_string()
 }
 
+fn day05b(door_id: &str) -> String {
+    // let mut password: Vec<(char, char)>  = (0..10_000_000)
+    //     // .into_par_iter() // speeds it up by a factor two
+    //     .map(|i| md5::compute(format!("{door_id}{i}")))
+    //     .filter(|digest| format!("{digest:x}").starts_with("00000"))
+    //     .map(|code| {
+    //         let pos_code= format!("{code:x}").chars().skip(5).take(2).collect::<Vec<char>>();
+    //         (pos_code[0], pos_code[1])
+    //     })
+    //     .collect();
+
+    // println!("{:?}", password);
+
+    // password.sort_by_key(|(p, _)| *p);
+    // password.iter().filter(|(p, _)| (*p as i32) < 8).map(|(_, v)| v).collect()
+
+    let mut password = ['?'; 8];
+    let mut i = 0;
+    loop {
+        let digest = md5::compute(format!("{door_id}{i}"));
+        let hash = format!("{digest:x}");
+        if hash.starts_with("00000") {
+            let pos = hash.chars().nth(5).unwrap().to_digit(10);
+            let c = hash.chars().nth(6).unwrap();
+            if pos.is_some_and(|x| x < 8) && password[pos.unwrap() as usize] == '?' {
+                password[pos.unwrap() as usize] = c;
+            }
+            if !password.contains(&'?') {
+                break;
+            }
+        }
+        i += 1;
+    }
+
+    password.iter().collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     #[ignore = "test takes ~17 s"]
-    fn test_day05() {
+    fn test_day05a() {
         assert_eq!(
             day05a("abc"),
             "18f47a30",
             "Part 5a with test data not correct"
+        );
+    }
+
+    #[test]
+    // #[ignore = "test takes ~17 s"]
+    fn test_day05b() {
+        assert_eq!(
+            day05b("abc"),
+            "05ace8e3",
+            "Part 5b with test data not correct"
         );
     }
 
