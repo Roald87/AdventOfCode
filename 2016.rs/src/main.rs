@@ -1,7 +1,6 @@
 use md5::Digest;
 use num::complex::Complex;
 use num::integer::Roots;
-use rayon::prelude::*;
 use regex::Regex;
 use std::{
     cmp::Reverse,
@@ -250,9 +249,6 @@ fn has_five_leading_zeros(digest: &Digest) -> bool {
     digest[..2] == [0, 0] && digest[2] <= 0x0F
 }
 
-/// Very slow (17 s in parallel). Can be reduced by writing a custom md5
-/// function, because it calculates the number from left to right. So
-/// it can exit early, if it finds a 0.
 fn day05a(door_id: &str) -> String {
     let mut hasher = md5::Context::new();
     hasher.consume(door_id.as_bytes());
@@ -276,18 +272,20 @@ fn day05b(door_id: &str) -> String {
 
     (0..) // infinite iterator
         .map(|i| format!("{door_id}{i}"))
-        .map(|s| format!("{:x}", md5::compute(s)))
-        .filter(|hash| hash.starts_with("00000"))
+        .map(md5::compute)
+        .filter(has_five_leading_zeros)
         .find(|hash| {
-            let pos = hash
-                .chars()
+            let hash_str = format!("{hash:?}");
+            let chars = hash_str.chars();
+            let pos = chars
+                .clone()
                 .nth(5)
                 .and_then(|c| c.to_digit(10))
                 .map(|d| d as usize);
 
             if let Some(pos) = pos {
                 if pos < PASSWORD_LENGTH && password[pos] == '?' {
-                    password[pos] = hash.chars().nth(6).unwrap();
+                    password[pos] = chars.clone().nth(6).unwrap();
                     found_chars += 1;
 
                     return found_chars == PASSWORD_LENGTH;
@@ -304,7 +302,7 @@ mod tests {
     use super::*;
 
     #[test]
-    #[ignore = "test takes ~17 s"]
+    #[ignore = "test takes 15 s"]
     fn test_day05a() {
         assert_eq!(
             day05a("abc"),
@@ -314,7 +312,7 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "test takes 1 min"]
+    #[ignore = "test takes 30 s"]
     fn test_day05b() {
         assert_eq!(
             day05b("abc"),
