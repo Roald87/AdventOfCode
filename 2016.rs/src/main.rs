@@ -260,38 +260,31 @@ fn day05a(door_id: &str) -> String {
 }
 
 fn day05b(door_id: &str) -> String {
-    // let mut password: Vec<(char, char)>  = (0..10_000_000)
-    //     // .into_par_iter() // speeds it up by a factor two
-    //     .map(|i| md5::compute(format!("{door_id}{i}")))
-    //     .filter(|digest| format!("{digest:x}").starts_with("00000"))
-    //     .map(|code| {
-    //         let pos_code= format!("{code:x}").chars().skip(5).take(2).collect::<Vec<char>>();
-    //         (pos_code[0], pos_code[1])
-    //     })
-    //     .collect();
+    const PASSWORD_LENGTH: usize = 8;
+    let mut password = ['?'; PASSWORD_LENGTH];
+    let mut found_chars = 0;
 
-    // println!("{:?}", password);
+    (0..) // infinite iterator
+        .map(|i| format!("{door_id}{i}"))
+        .map(|s| format!("{:x}", md5::compute(s)))
+        .filter(|hash| hash.starts_with("00000"))
+        .find(|hash| {
+            let pos = hash
+                .chars()
+                .nth(5)
+                .and_then(|c| c.to_digit(10))
+                .map(|d| d as usize);
 
-    // password.sort_by_key(|(p, _)| *p);
-    // password.iter().filter(|(p, _)| (*p as i32) < 8).map(|(_, v)| v).collect()
+            if let Some(pos) = pos {
+                if pos < PASSWORD_LENGTH && password[pos] == '?' {
+                    password[pos] = hash.chars().nth(6).unwrap();
+                    found_chars += 1;
 
-    let mut password = ['?'; 8];
-    let mut i = 0;
-    loop {
-        let digest = md5::compute(format!("{door_id}{i}"));
-        let hash = format!("{digest:x}");
-        if hash.starts_with("00000") {
-            let pos = hash.chars().nth(5).unwrap().to_digit(10);
-            let c = hash.chars().nth(6).unwrap();
-            if pos.is_some_and(|x| x < 8) && password[pos.unwrap() as usize] == '?' {
-                password[pos.unwrap() as usize] = c;
+                    return found_chars == PASSWORD_LENGTH;
+                }
             }
-            if !password.contains(&'?') {
-                break;
-            }
-        }
-        i += 1;
-    }
+            false
+        });
 
     password.iter().collect()
 }
