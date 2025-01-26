@@ -1,3 +1,4 @@
+use md5::Digest;
 use num::complex::Complex;
 use num::integer::Roots;
 use rayon::prelude::*;
@@ -245,18 +246,27 @@ fn day04b(codes: &[(String, i32, String)]) -> i32 {
         .unwrap()
 }
 
+fn has_five_leading_zeros(digest: &Digest) -> bool {
+    digest[..2] == [0, 0] && digest[2] <= 0x0F
+}
+
 /// Very slow (17 s in parallel). Can be reduced by writing a custom md5
 /// function, because it calculates the number from left to right. So
 /// it can exit early, if it finds a 0.
 fn day05a(door_id: &str) -> String {
-    let password: String = (0..10_000_000)
-        .into_par_iter() // speeds it up by a factor two
-        .map(|i| md5::compute(format!("{door_id}{i}")))
-        .filter(|digest| format!("{digest:x}").starts_with("00000"))
-        .map(|code| format!("{code:x}").chars().nth(5).unwrap())
-        .collect();
+    let mut hasher = md5::Context::new();
+    hasher.consume(door_id.as_bytes());
 
-    password[..8].to_string()
+    (0..)
+        .map(|i| {
+            let mut temp_hasher = hasher.clone();
+            temp_hasher.consume(i.to_string().as_bytes());
+            temp_hasher.compute()
+        })
+        .filter(has_five_leading_zeros)
+        .take(8)
+        .map(|code| format!("{code:x}").chars().nth(5).unwrap())
+        .collect()
 }
 
 fn day05b(door_id: &str) -> String {
